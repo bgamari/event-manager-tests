@@ -1,0 +1,48 @@
+# Event manager tests
+
+These are a couple of regression tests for GHC bug #10317.
+
+These must be built with `ghc -threaded` and should be run with the shells
+scripts.
+
+## TestMultipleReg
+
+This test verifies that multiple registrations against the same fd fire as
+expected. The Haskell test opens an `AF_INET` socket and registers read and
+write event registrations. The shell script is listening on this socket and
+writes to it after a delay. Consequently, the write registration should trigger
+immediately upon connection and the read registration should fire after the
+delay.
+
+### Expected output
+```bash
+$ ./test-multiple-reg.sh 
+write callback
+("hello",5)
+```
+
+### Failed output
+```bash
+$ ./test-multiple-reg.sh 
+write callback
+TestMultipleReg: thread blocked indefinitely in an MVar operation
+```
+
+## TestMultiShot
+
+This test verifies that `MultiShot` registrations indeed fire multiple
+times. The Haskell test opens a fifo filled with data by the shell script. We
+then register a multi-shot read event against this fd and in the callback
+perform several short reads. The callback should be called several times.
+
+### Expected output
+```bash
+$ ./test-multishot.sh 
+ok
+```
+
+### Failed output
+```bash
+$ ./test-multishot.sh 
+TestMultishot: thread blocked indefinitely in an MVar operation
+```
