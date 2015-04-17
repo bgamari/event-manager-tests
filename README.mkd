@@ -4,8 +4,8 @@ These are a couple of regression tests for
 [GHC bug #10317](https://ghc.haskell.org/trac/ghc/ticket/10317). See the
 discussion on [D849](https://phabricator.haskell.org/D849).
 
-These must be built with `ghc -threaded` and should be run with the shells
-scripts.
+These must be built with `ghc -threaded` and should be run with the included
+shell scripts.
 
 ## TestMultipleReg
 
